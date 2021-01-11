@@ -139,13 +139,20 @@ public class MovieDetail {
 
     @Override
     public String toString() {
-        return super.toString() + "MovieDetail{" +
+        return "MovieDetail{" +
                 "originalTitle='" + originalTitle + '\'' +
                 ", released=" + released +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", voteCount=" + voteCount +
                 ", genres=" + genres +
                 ", productionCompanies=" + productionCompanies +
+                ", adult=" + adult +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", overview='" + overview + '\'' +
+                ", popularity='" + popularity + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", voteAverage=" + voteAverage +
                 '}';
     }
 }
