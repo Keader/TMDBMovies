@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TMDB Movies</string>
+    <string name="max_rating">/10</string>
+    <string name="sinopse_label">Sinopse</string>
+    <string name="genre">Gênero</string>
+    <string name="production">Produção</string>
+    <string name="popularity">Popularidade</string>
+    <string name="popularity_format">"Avaliado em %1$s/10, baseado em %2$s votos, desde o seu lançamento em %3$s"</string>
 </resources>

@@ -16,8 +16,9 @@ public class MovieDetail {
     private String popularity;
     private String posterPath;
     private double voteAverage;
+    private String backdropPath;
 
-    public MovieDetail(String originalTitle, boolean released, String releaseDate, int voteCount, List<Genre> genres, List<Company> productionCompanies, boolean adult, int id, String title, String overview, String popularity, String posterPath, double voteAverage) {
+    public MovieDetail(String originalTitle, boolean released, String releaseDate, int voteCount, List<Genre> genres, List<Company> productionCompanies, boolean adult, int id, String title, String overview, String popularity, String posterPath, double voteAverage, String backdropPath) {
         this.originalTitle = originalTitle;
         this.released = released;
         this.releaseDate = releaseDate;
@@ -31,6 +32,15 @@ public class MovieDetail {
         this.popularity = popularity;
         this.posterPath = posterPath;
         this.voteAverage = voteAverage;
+        this.backdropPath = backdropPath;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     public boolean isAdult() {

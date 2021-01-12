@@ -12,6 +12,13 @@ public interface TMDBService {
     Call<MovieResult> getMovies(@Query("page") int page);
 
     @GET("movie/{movie_id}")
-    Call<MovieDetail> getMovieDetail(@Path("movie_id") long movieId, @Query("external_source") String source);
+    Call<MovieDetail> getMovieDetail(
+            @Path("movie_id") long movieId,
+            @Query("external_source") String source);
+
+    // TODO: Implement Get Genres
+    /*@GET("genre/movie/list")
+    Call<?> getGenres();
+     */
 }
 
