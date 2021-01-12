@@ -1,6 +1,11 @@
 package dev.keader.tmdbmovies.api.tmdb;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Genre {
+    @PrimaryKey
     private int id;
     private String name;
 

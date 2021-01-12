@@ -2,6 +2,8 @@ package dev.keader.tmdbmovies.di;
 
 import android.content.Context;
 
+import androidx.room.Room;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,10 +16,13 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import dev.keader.tmdbmovies.Constants;
 import dev.keader.tmdbmovies.TMDBMovies;
 import dev.keader.tmdbmovies.api.TMDBService;
+import dev.keader.tmdbmovies.database.TMDBDatabase;
+import dev.keader.tmdbmovies.database.dao.TMDBDao;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -85,5 +90,21 @@ public class AppModule {
             Request request = requestBuilder.build();
             return chain.proceed(request);
         };
+    }
+
+    @Provides
+    @Singleton
+    TMDBDatabase provideDatabase(@ApplicationContext Context context) {
+        return Room.databaseBuilder(
+                context.getApplicationContext(),
+                TMDBDatabase.class,
+                "tmdb_movies_database")
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    TMDBDao  provideTMDBDao(TMDBDatabase db) {
+        return db.tmdbDao();
     }
 }

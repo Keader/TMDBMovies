@@ -1,7 +1,6 @@
 package dev.keader.tmdbmovies.api.tmdb;
 
 public class Movie {
-    private boolean adult;
     private int id;
     private String title;
     private String overview;
@@ -9,22 +8,13 @@ public class Movie {
     private String posterPath;
     private double voteAverage;
 
-    public Movie(boolean adult, int id, String title, String overview, String popularity, String posterPath, double voteAverage) {
-        this.adult = adult;
+    public Movie(int id, String title, String overview, String popularity, String posterPath, double voteAverage) {
         this.id = id;
         this.title = title;
         this.overview = overview;
         this.popularity = popularity;
         this.posterPath = posterPath;
         this.voteAverage = voteAverage;
-    }
-
-    public boolean isAdult() {
-        return adult;
-    }
-
-    public void setAdult(boolean adult) {
-        this.adult = adult;
     }
 
     public int getId() {
