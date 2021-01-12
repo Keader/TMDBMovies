@@ -1,5 +1,6 @@
 package dev.keader.tmdbmovies.api;
 
+import dev.keader.tmdbmovies.api.tmdb.GenreResult;
 import dev.keader.tmdbmovies.api.tmdb.MovieDetail;
 import dev.keader.tmdbmovies.api.tmdb.MovieResult;
 import retrofit2.Call;
@@ -16,9 +17,7 @@ public interface TMDBService {
             @Path("movie_id") long movieId,
             @Query("external_source") String source);
 
-    // TODO: Implement Get Genres
-    /*@GET("genre/movie/list")
-    Call<?> getGenres();
-     */
+    @GET("genre/movie/list")
+    Call<GenreResult> getGenres();
 }
 
