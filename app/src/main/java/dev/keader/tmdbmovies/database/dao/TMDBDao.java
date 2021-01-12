@@ -1,6 +1,7 @@
 package dev.keader.tmdbmovies.database.dao;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -13,26 +14,27 @@ import dev.keader.tmdbmovies.database.model.MovieDTO;
 import dev.keader.tmdbmovies.database.model.MovieGenre;
 import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 
+@Dao
 public abstract class TMDBDao {
 
     // Inserts / Updates
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertOrUpdateMovie(MovieDTO movie);
+    public abstract void insertOrUpdateMovie(MovieDTO movie);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertOrUpdateGenre(Genre genre);
+    public abstract void insertOrUpdateGenre(Genre genre);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertOrUpdateCompany(Company company);
+    public abstract void insertOrUpdateCompany(Company company);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertOrUpdateMovieGenre(MovieGenre movieGenre);
+    public abstract void insertOrUpdateMovieGenre(MovieGenre movieGenre);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertOrUpdateMovieCompany(MovieCompany movieCompany);
+    public abstract void insertOrUpdateMovieCompany(MovieCompany movieCompany);
 
     @Transaction
-    void insertOrUpateMovieWithRelations(MovieWithRelations movieWithRelations) {
+    public void insertOrUpateMovieWithRelations(MovieWithRelations movieWithRelations) {
         int movieId = movieWithRelations.getMovie().getId();
         insertOrUpdateMovie(movieWithRelations.getMovie());
         for (Genre genre: movieWithRelations.getGenres()) {
@@ -52,57 +54,57 @@ public abstract class TMDBDao {
             "voteAverage = :voteAverage, originalTitle = :originalTitle, released = :releasedInt," +
             " releaseDate = :releaseDate, voteCount = :voteCount, backdropPath = :backdropPath " +
             "WHERE id = :movieId")
-    abstract void updateMovieDetail(int movieId, double voteAverage, String originalTitle,
+    public abstract void updateMovieDetail(int movieId, double voteAverage, String originalTitle,
                                     int releasedInt, String releaseDate, int voteCount,
                                     String backdropPath);
 
     // Selects
     @Transaction
     @Query("SELECT * FROM Movie WHERE id = :movieId")
-    abstract LiveData<MovieWithRelations> getMovieWithRelations(int movieId);
+    public abstract LiveData<MovieWithRelations> getMovieWithRelations(int movieId);
 
     @Transaction
     @Query("SELECT * FROM Movie WHERE id = :movieId")
-    abstract MovieWithRelations getMovieWithRelationsDirect(int movieId);
+    public abstract MovieWithRelations getMovieWithRelationsDirect(int movieId);
 
     // Do not have detail part
     @Query("SELECT * FROM Movie WHERE id = :movieId")
-    abstract LiveData<MovieDTO> getMovieSimple(int movieId);
+    public abstract LiveData<MovieDTO> getMovieSimple(int movieId);
 
     // Do not have detail part
     @Query("SELECT * FROM Movie WHERE id = :movieId")
-    abstract MovieDTO getMovieSimpleDirect(int movieId);
+    public abstract MovieDTO getMovieSimpleDirect(int movieId);
 
     @Query("SELECT * FROM Genre WHERE id = :genreId")
-    abstract Genre getGenreDirect(int genreId);
+    public abstract Genre getGenreDirect(int genreId);
 
     @Query("SELECT * FROM Genre WHERE id = :genreId")
-    abstract LiveData<Genre> getGenre(int genreId);
+    public abstract LiveData<Genre> getGenre(int genreId);
 
     @Query("SELECT * FROM Company WHERE id = :companyId")
-    abstract Company getCompanyDirect(int companyId);
+    public abstract Company getCompanyDirect(int companyId);
 
     @Query("SELECT * FROM Genre WHERE id = :companyId")
-    abstract LiveData<Company> getCompany(int companyId);
+    public abstract LiveData<Company> getCompany(int companyId);
 
     // Deletes (clean)
     @Query("DELETE FROM Movie")
-    abstract void cleanMovies();
+    public abstract void cleanMovies();
 
     @Query("DELETE FROM Genre")
-    abstract void cleanGenres();
+    public abstract void cleanGenres();
 
     @Query("DELETE FROM Company")
-    abstract void cleanCompanies();
+    public abstract void cleanCompanies();
 
     @Query("DELETE FROM MovieCompany")
-    abstract void cleanMovieCompany();
+    public abstract void cleanMovieCompany();
 
     @Query("DELETE FROM MovieGenre")
-    abstract void cleanMovieGenres();
+    public abstract void cleanMovieGenres();
 
     @Transaction
-    void cleanDatabase() {
+    public void cleanDatabase() {
         cleanMovies();
         cleanGenres();
         cleanCompanies();

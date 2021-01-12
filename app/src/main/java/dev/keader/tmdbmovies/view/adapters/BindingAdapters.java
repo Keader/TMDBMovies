@@ -2,6 +2,7 @@ package dev.keader.tmdbmovies.view.adapters;
 
 import android.content.Context;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 
@@ -9,8 +10,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+
 import dev.keader.tmdbmovies.Constants;
 import dev.keader.tmdbmovies.R;
+import dev.keader.tmdbmovies.api.tmdb.Company;
+import dev.keader.tmdbmovies.api.tmdb.Genre;
+import dev.keader.tmdbmovies.database.model.MovieDTO;
+import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 
 public class BindingAdapters {
 
@@ -39,5 +48,58 @@ public class BindingAdapters {
                 .transform(new CenterCrop(), new RoundedCorners(16))
                 .placeholder(R.drawable.loading)
                 .into(imageView);
+    }
+
+    @BindingAdapter({"bgUrl"})
+    public static void loadBgImage(ImageView imageView, String url) {
+        if (url == null || url.isEmpty())
+            return;
+
+        Context context = imageView.getContext();
+        String completeUrl = Constants.TMDB_BASE_IMAGE_URL + "original" + url;
+        Glide.with(context)
+                .load(completeUrl)
+                .transform(new CenterCrop(), new GlideBlurTransformation(context))
+                .placeholder(R.drawable.loading)
+                .into(imageView);
+    }
+
+    @BindingAdapter({"genre"})
+    public static void setGenre(TextView textView, MovieWithRelations movieWithRelations) {
+        if (movieWithRelations == null)
+            return;
+        String text =  movieWithRelations.getGenres().stream()
+                .map(Genre::getName)
+                .collect(Collectors.joining(" | "));
+        textView.setText(text);
+
+    }
+
+    @BindingAdapter({"company"})
+    public static void setCompany(TextView textView, MovieWithRelations movieWithRelations) {
+        if (movieWithRelations == null)
+            return;
+
+        String text =  movieWithRelations.getCompanies().stream()
+                .map(Company::getName)
+                .collect(Collectors.joining(" | "));
+        textView.setText(text);
+    }
+
+    @BindingAdapter({"rating"})
+    public static void setRating(TextView textView, MovieDTO movie) {
+        if (movie == null)
+            return;
+
+        String date = LocalDate.parse(movie.getReleaseDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        String text = textView.getResources().getString(
+                R.string.popularity_format,
+                Double.toString(movie.getPopularity()),
+                Integer.toString(movie.getVoteCount()),
+                date);
+
+        textView.setText(text);
     }
 }

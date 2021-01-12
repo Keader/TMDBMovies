@@ -1,6 +1,7 @@
 package dev.keader.tmdbmovies.database.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Movie")
@@ -9,7 +10,7 @@ public class MovieDTO {
     private int id;
     private String title;
     private String overview;
-    private String popularity;
+    private double popularity;
     private String posterPath;
     // Additional data (detail)
     private double voteAverage;
@@ -19,7 +20,7 @@ public class MovieDTO {
     private int voteCount;
     private String backdropPath;
 
-    public MovieDTO(int id, String title, String overview, String popularity, String posterPath, double voteAverage, String originalTitle, boolean released, String releaseDate, int voteCount, String backdropPath) {
+    public MovieDTO(int id, String title, String overview, double popularity, String posterPath, double voteAverage, String originalTitle, boolean released, String releaseDate, int voteCount, String backdropPath) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -31,6 +32,15 @@ public class MovieDTO {
         this.releaseDate = releaseDate;
         this.voteCount = voteCount;
         this.backdropPath = backdropPath;
+    }
+
+    @Ignore
+    public MovieDTO(int id, String title, String overview, double popularity, String posterPath) {
+        this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.popularity = popularity;
+        this.posterPath = posterPath;
     }
 
     public int getId() {
@@ -57,11 +67,11 @@ public class MovieDTO {
         this.overview = overview;
     }
 
-    public String getPopularity() {
+    public double getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(String popularity) {
+    public void setPopularity(double popularity) {
         this.popularity = popularity;
     }
 

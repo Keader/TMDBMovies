@@ -10,17 +10,20 @@ import dev.keader.tmdbmovies.Constants;
 import dev.keader.tmdbmovies.api.TMDBService;
 import dev.keader.tmdbmovies.api.tmdb.MovieDetail;
 import dev.keader.tmdbmovies.api.tmdb.MovieResult;
+import dev.keader.tmdbmovies.database.dao.TMDBDao;
 import retrofit2.Response;
 import timber.log.Timber;
 
 public class TMDBRepository {
     private final TMDBService tmdbService;
     private final AppExecutors executors;
+    private final TMDBDao database;
 
     @Inject
-    public TMDBRepository(TMDBService tmdbService, AppExecutors executors) {
+    public TMDBRepository(TMDBService tmdbService, AppExecutors executors, TMDBDao database) {
         this.tmdbService = tmdbService;
         this.executors = executors;
+        this.database = database;
     }
 
     public String loadMovies(int page) {

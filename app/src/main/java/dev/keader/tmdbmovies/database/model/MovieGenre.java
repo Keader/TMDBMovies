@@ -1,8 +1,9 @@
 package dev.keader.tmdbmovies.database.model;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 
-@Entity(primaryKeys = {"movieId", "genreId"})
+@Entity(primaryKeys = {"movieId", "genreId"}, indices = {@Index("genreId")})
 public class MovieGenre {
     private int movieId;
     private int genreId;
