@@ -74,7 +74,6 @@ public class BindingAdapters {
                 .collect(Collectors.joining(" | "));
 
         textView.setText(text);
-
     }
 
     @BindingAdapter({"company"})

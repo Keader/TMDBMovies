@@ -87,8 +87,9 @@ public abstract class TMDBDao {
     @Query("SELECT * FROM Movie WHERE id = :movieId")
     public abstract MovieDTO getMovieSimpleDirect(int movieId);
 
-    @Query("SELECT * FROM Movie ORDER BY page ASC")
-    public abstract DataSource.Factory<Integer, MovieDTO> getMoviePaged();
+    @Transaction
+    @Query("SELECT * FROM Movie ORDER BY `index` ASC")
+    public abstract DataSource.Factory<Integer, MovieWithRelations> getMoviePaged();
 
     @Query("SELECT * FROM Genre WHERE id IN (:ids)")
     public abstract List<Genre> getGenreListDirect(List<Integer> ids);

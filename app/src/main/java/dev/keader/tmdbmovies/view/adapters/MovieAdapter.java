@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import dev.keader.tmdbmovies.database.model.MovieDTO;
+import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.databinding.ItemMovieBinding;
 
-public class MovieAdapter extends PagedListAdapter<MovieDTO, MovieAdapter.ViewHolder> {
+public class MovieAdapter extends PagedListAdapter<MovieWithRelations, MovieAdapter.ViewHolder> {
 
     public MovieAdapter() {
         super(DIFF_CALLBACK);
@@ -27,7 +28,7 @@ public class MovieAdapter extends PagedListAdapter<MovieDTO, MovieAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MovieDTO item = getItem(position);
+        MovieWithRelations item = getItem(position);
         if (item != null)
             holder.bind(item);
     }
@@ -40,8 +41,8 @@ public class MovieAdapter extends PagedListAdapter<MovieDTO, MovieAdapter.ViewHo
             this.binding = binding;
         }
 
-        public void bind(MovieDTO movieDTO) {
-            binding.setMovie(movieDTO);
+        public void bind(MovieWithRelations movieDTO) {
+            binding.setMovieWithRelations(movieDTO);
         }
 
         public static ViewHolder from(ViewGroup parent) {
@@ -51,17 +52,17 @@ public class MovieAdapter extends PagedListAdapter<MovieDTO, MovieAdapter.ViewHo
         }
     }
 
-    private static DiffUtil.ItemCallback<MovieDTO> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<MovieDTO>() {
+    private static DiffUtil.ItemCallback<MovieWithRelations> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<MovieWithRelations>() {
 
                 @Override
-                public boolean areItemsTheSame(MovieDTO oldItem, MovieDTO newItem) {
+                public boolean areItemsTheSame(MovieWithRelations oldItem, MovieWithRelations newItem) {
                     // The ID property identifies when items are the same.
-                    return oldItem.getId() == newItem.getId();
+                    return oldItem.getMovie().getId() == newItem.getMovie().getId();
                 }
 
                 @Override
-                public boolean areContentsTheSame(MovieDTO oldItem, MovieDTO newItem) {
+                public boolean areContentsTheSame(MovieWithRelations oldItem, MovieWithRelations newItem) {
                     // Don't use the "==" operator here. Either implement and use .equals(),
                     // or write custom data comparison logic here.
                     return oldItem.equals(newItem);

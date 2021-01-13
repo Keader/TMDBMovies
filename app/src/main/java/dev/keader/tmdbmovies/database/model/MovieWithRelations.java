@@ -5,6 +5,7 @@ import androidx.room.Junction;
 import androidx.room.Relation;
 
 import java.util.List;
+import java.util.Objects;
 
 import dev.keader.tmdbmovies.api.tmdb.Company;
 import dev.keader.tmdbmovies.api.tmdb.Genre;
@@ -57,5 +58,19 @@ public class MovieWithRelations {
 
     public void setCompanies(List<Company> companies) {
         this.companies = companies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieWithRelations that = (MovieWithRelations) o;
+        return movie.equals(that.movie) &&
+                genres.equals(that.genres);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(movie, genres);
     }
 }

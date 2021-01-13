@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="movie"
-            type="dev.keader.tmdbmovies.database.model.MovieDTO" />
+            name="movieWithRelations"
+            type="dev.keader.tmdbmovies.database.model.MovieWithRelations" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             app:layout_constraintDimensionRatio="H,2:3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tumbUrl="@{movie.posterPath}"
+            app:tumbUrl="@{movieWithRelations.movie.posterPath}"
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:gravity="bottom"
-            android:text="@{movie.title}"
+            android:text="@{movieWithRelations.movie.title}"
             android:textAlignment="gravity"
             android:textColor="?attr/colorOnBackground"
             android:textSize="18sp"
@@ -52,7 +52,7 @@
             android:ellipsize="end"
             android:gravity="bottom"
             android:maxLines="3"
-            app:overview="@{movie}"
+            app:overview="@{movieWithRelations.movie}"
             android:textAlignment="gravity"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp"
@@ -72,7 +72,7 @@
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/cover"
             app:layout_constraintTop_toBottomOf="@+id/overview"
-            app:ratingText="@{movie}"
+            app:ratingText="@{movieWithRelations.movie}"
             tools:text="9.4" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -96,7 +96,7 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:gravity="bottom"
-            android:text="@{movie.genresFormatted}"
+            app:genre="@{movieWithRelations}"
             android:maxLines="1"
             android:textAlignment="gravity"
             android:textColor="?attr/colorPrimary"
@@ -122,7 +122,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cover"
             app:layout_constraintTop_toBottomOf="@+id/genders"
-            app:releaseDate="@{movie}"
+            app:releaseDate="@{movieWithRelations.movie}"
             tools:text="11/01/2010" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

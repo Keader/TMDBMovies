@@ -17,6 +17,7 @@ import dev.keader.tmdbmovies.api.tmdb.MovieDetail;
 import dev.keader.tmdbmovies.api.tmdb.MovieResult;
 import dev.keader.tmdbmovies.database.dao.TMDBDao;
 import dev.keader.tmdbmovies.database.model.MovieDTO;
+import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.view.adapters.paging.MovieBoundaryCallback;
 import retrofit2.Response;
 import timber.log.Timber;
@@ -33,8 +34,8 @@ public class TMDBRepository {
         this.database = database;
     }
 
-    public LiveData<PagedList<MovieDTO>> loadMovies() {
-        DataSource.Factory<Integer, MovieDTO> dataSourceFactory = database.getMoviePaged();
+    public LiveData<PagedList<MovieWithRelations>> loadMovies() {
+        DataSource.Factory<Integer, MovieWithRelations> dataSourceFactory = database.getMoviePaged();
         LivePagedListBuilder builder = new LivePagedListBuilder(dataSourceFactory, 20);
         return builder
                 .setBoundaryCallback(new MovieBoundaryCallback(tmdbService, executors, database))

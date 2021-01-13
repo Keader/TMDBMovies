@@ -14,59 +14,48 @@ public class MovieDTO {
     private String overview;
     private double popularity;
     private String posterPath;
-    private int page;
+    private int index;
     private String releaseDate;
     private double voteAverage;
-    private String genresFormatted;
     // Additional data (detail)
     private String originalTitle;
     private int voteCount;
     private String backdropPath;
     private boolean released;
 
-    public MovieDTO(int id, String title, String overview, double popularity, String posterPath, int page, double voteAverage, String originalTitle, boolean released, String releaseDate, String genresFormatted, int voteCount, String backdropPath) {
+    public MovieDTO(int id, String title, String overview, double popularity, String posterPath, int index, String releaseDate, double voteAverage, String originalTitle, int voteCount, String backdropPath, boolean released) {
         this.id = id;
         this.title = title;
         this.overview = overview;
         this.popularity = popularity;
         this.posterPath = posterPath;
-        this.page = page;
+        this.index = index;
+        this.releaseDate = releaseDate;
         this.voteAverage = voteAverage;
         this.originalTitle = originalTitle;
-        this.released = released;
-        this.releaseDate = releaseDate;
-        this.genresFormatted = genresFormatted;
         this.voteCount = voteCount;
         this.backdropPath = backdropPath;
+        this.released = released;
     }
 
     @Ignore
-    public MovieDTO(int id, String title, String overview, double popularity, double voteAverage, String posterPath, String releaseDate, int page, String genresFormatted) {
+    public MovieDTO(int id, String title, String overview, double popularity, int index, double voteAverage, String posterPath, String releaseDate) {
         this.id = id;
         this.title = title;
         this.overview = overview;
         this.popularity = popularity;
+        this.index = index;
         this.voteAverage = voteAverage;
         this.posterPath = posterPath;
         this.releaseDate = releaseDate;
-        this.page = page;
-        this.genresFormatted = genresFormatted;
     }
 
-    public String getGenresFormatted() {
-        return genresFormatted;
+    public int getIndex() {
+        return index;
     }
 
-    public void setGenresFormatted(String genresFormatted) {
-        this.genresFormatted = genresFormatted;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public int getId() {
@@ -164,7 +153,7 @@ public class MovieDTO {
         MovieDTO movieDTO = (MovieDTO) o;
         return id == movieDTO.id &&
                 Double.compare(movieDTO.popularity, popularity) == 0 &&
-                page == movieDTO.page &&
+                index == movieDTO.index &&
                 Double.compare(movieDTO.voteAverage, voteAverage) == 0 &&
                 released == movieDTO.released &&
                 title.equals(movieDTO.title) &&
@@ -174,6 +163,6 @@ public class MovieDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, overview, popularity, posterPath, page, voteAverage, originalTitle, released, releaseDate, voteCount, backdropPath);
+        return Objects.hash(id, title, overview, popularity, posterPath, index, voteAverage, originalTitle, released, releaseDate, voteCount, backdropPath);
     }
 }

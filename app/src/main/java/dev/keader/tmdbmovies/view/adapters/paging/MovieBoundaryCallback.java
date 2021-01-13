@@ -17,10 +17,11 @@ import dev.keader.tmdbmovies.api.tmdb.MovieResult;
 import dev.keader.tmdbmovies.database.dao.TMDBDao;
 import dev.keader.tmdbmovies.database.model.MovieDTO;
 import dev.keader.tmdbmovies.database.model.MovieGenre;
+import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieDTO> {
+public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithRelations> {
     private final TMDBService tmdbService;
     private final AppExecutors executors;
     private final TMDBDao database;
@@ -39,35 +40,40 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieDTO> 
 
     @Override
     public void onZeroItemsLoaded() {
-        loadPage(1);
+        loadPage(1, isFirstLoad);
+        isFirstLoad = false;
     }
 
     @Override
-    public void onItemAtFrontLoaded(@NonNull MovieDTO itemAtFront) {
-        int previousPage = itemAtFront.getPage() - 1;
+    public void onItemAtFrontLoaded(@NonNull MovieWithRelations itemAtFront) {
+        int page = (itemAtFront.getMovie().getIndex() / 20) + 1;
+        int previousPage = page - 1;
         if (previousPage > 0)
-            loadPage(previousPage);
+            loadPage(previousPage, isFirstLoad);
         else if (isFirstLoad) {
+            loadPage(1, isFirstLoad);
             isFirstLoad = false;
-            loadGenres();
-            loadPage(1);
         }
     }
 
     @Override
-    public void onItemAtEndLoaded(@NonNull MovieDTO itemAtEnd) {
-        int nextPage = itemAtEnd.getPage() + 1;
+    public void onItemAtEndLoaded(@NonNull MovieWithRelations itemAtEnd) {
+        int page = (itemAtEnd.getMovie().getIndex() / 20) + 1;
+        int nextPage = page + 1;
         if (nextPage <= maxPages)
-            loadPage(nextPage);
+            loadPage(nextPage, isFirstLoad);
     }
 
-    private void loadPage(int page) {
+    // OBS: Check Genre is "cached" here, because can have a racing condition
+    private void loadPage(int page, boolean loadGenre) {
         if (isRunning)
             return;
 
         isRunning = true;
         executors.networkIO().execute(() -> {
             try {
+                if (loadGenre)
+                    loadGenres();
                 Response<MovieResult> result = tmdbService.getMovies(page).execute();
                 if (!result.isSuccessful()) {
                     Timber.e("%s%s", result.code(), result.message());
@@ -79,16 +85,13 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieDTO> 
                     maxPages = movieResult.getTotalPages();
 
                 List<MovieDTO> movies = new ArrayList();
-                for (Movie movie : movieResult.getResults()) {
-                    List<Genre> genres = database.getGenreListDirect(movie.getGenreIds());
-
-                    String genresFormatted =  genres.stream()
-                            .map(Genre::getName)
-                            .collect(Collectors.joining(" | "));
+                for (int i = 0; i < movieResult.getResults().size(); i++) {
+                    Movie movie = movieResult.getResults().get(i);
+                    int index = (movieResult.getPage() - 1) * 20 + i;
 
                     MovieDTO dto = new MovieDTO(movie.getId(), movie.getTitle(), movie.getOverview(),
-                            movie.getPopularity(), movie.getVoteAverage(), movie.getPosterPath(),
-                            movie.getReleaseDate(), movieResult.getPage(), genresFormatted);
+                            movie.getPopularity(), index, movie.getVoteAverage(),
+                            movie.getPosterPath(), movie.getReleaseDate());
 
                     movies.add(dto);
 
@@ -110,18 +113,16 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieDTO> 
     }
 
     private void loadGenres() {
-        executors.networkIO().execute(() -> {
-            try {
-                Response<GenreResult> result = tmdbService.getGenres().execute();
+        try {
+            Response<GenreResult> result = tmdbService.getGenres().execute();
 
-                if (!result.isSuccessful()) {
-                    Timber.e("%s%s", result.code(), result.message());
-                    return;
-                }
-                database.insertOrUpdateGenres(result.body().getGenres());
-            } catch (IOException e) {
-                Timber.e(e);
+            if (!result.isSuccessful()) {
+                Timber.e("%s%s", result.code(), result.message());
+                return;
             }
-        });
+            database.insertOrUpdateGenres(result.body().getGenres());
+        } catch (IOException e) {
+            Timber.e(e);
+        }
     }
 }

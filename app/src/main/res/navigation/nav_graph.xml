@@ -6,7 +6,19 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="dev.keader.tmdbmovies.view.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="TMDB Popular Movies" />
 
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="dev.keader.tmdbmovies.view.details.DetailFragment"
+        android:label="Filme - Detalhes" >
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_detailFragment"
+        app:destination="@id/detailFragment" />
 
 </navigation>
