@@ -1,20 +1,42 @@
 package dev.keader.tmdbmovies.api.tmdb;
 
+import java.util.List;
+
 public class Movie {
     private int id;
     private String title;
     private String overview;
-    private String popularity;
+    private double popularity;
     private String posterPath;
     private double voteAverage;
+    private List<Integer> genreIds;
+    private String releaseDate;
 
-    public Movie(int id, String title, String overview, String popularity, String posterPath, double voteAverage) {
+    public Movie(int id, String title, String overview, double popularity, String posterPath, double voteAverage, List<Integer> genreIds, String releaseDate) {
         this.id = id;
         this.title = title;
         this.overview = overview;
         this.popularity = popularity;
         this.posterPath = posterPath;
         this.voteAverage = voteAverage;
+        this.genreIds = genreIds;
+        this.releaseDate = releaseDate;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public List<Integer> getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(List<Integer> genreIds) {
+        this.genreIds = genreIds;
     }
 
     public int getId() {
@@ -41,11 +63,11 @@ public class Movie {
         this.overview = overview;
     }
 
-    public String getPopularity() {
+    public double getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(String popularity) {
+    public void setPopularity(double popularity) {
         this.popularity = popularity;
     }
 

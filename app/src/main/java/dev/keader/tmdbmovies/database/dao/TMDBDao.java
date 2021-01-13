@@ -1,11 +1,14 @@
 package dev.keader.tmdbmovies.database.dao;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+
+import java.util.List;
 
 import dev.keader.tmdbmovies.api.tmdb.Company;
 import dev.keader.tmdbmovies.api.tmdb.Genre;
@@ -22,13 +25,22 @@ public abstract class TMDBDao {
     public abstract void insertOrUpdateMovie(MovieDTO movie);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertOrUpdateMovies(List<MovieDTO> movies);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertOrUpdateGenre(Genre genre);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertOrUpdateGenres(List<Genre> genres);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertOrUpdateCompany(Company company);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertOrUpdateMovieGenre(MovieGenre movieGenre);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertOrUpdateMovieGenres(List<MovieGenre> movieGenres);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertOrUpdateMovieCompany(MovieCompany movieCompany);
@@ -74,6 +86,12 @@ public abstract class TMDBDao {
     // Do not have detail part
     @Query("SELECT * FROM Movie WHERE id = :movieId")
     public abstract MovieDTO getMovieSimpleDirect(int movieId);
+
+    @Query("SELECT * FROM Movie ORDER BY page ASC")
+    public abstract DataSource.Factory<Integer, MovieDTO> getMoviePaged();
+
+    @Query("SELECT * FROM Genre WHERE id IN (:ids)")
+    public abstract List<Genre> getGenreListDirect(List<Integer> ids);
 
     @Query("SELECT * FROM Genre WHERE id = :genreId")
     public abstract Genre getGenreDirect(int genreId);

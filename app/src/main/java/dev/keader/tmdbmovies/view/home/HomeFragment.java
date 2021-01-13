@@ -29,6 +29,7 @@ import dev.keader.tmdbmovies.database.model.MovieDTO;
 import dev.keader.tmdbmovies.database.model.MovieGenre;
 import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.databinding.FragmentHomeBinding;
+import dev.keader.tmdbmovies.view.adapters.MovieAdapter;
 import timber.log.Timber;
 
 @AndroidEntryPoint
@@ -41,6 +42,15 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+
+        binding.setLifecycleOwner(this);
+
+        MovieAdapter adapter = new MovieAdapter();
+        viewModel.getMoviePagedList().observe(getViewLifecycleOwner(), list -> {
+            adapter.submitList(list);
+        });
+
+        binding.recyclerViewMovies.setAdapter(adapter);
 
         /*
         TMDBDatabase db = Room.inMemoryDatabaseBuilder(

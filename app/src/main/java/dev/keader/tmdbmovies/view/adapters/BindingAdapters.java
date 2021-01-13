@@ -68,9 +68,11 @@ public class BindingAdapters {
     public static void setGenre(TextView textView, MovieWithRelations movieWithRelations) {
         if (movieWithRelations == null)
             return;
+
         String text =  movieWithRelations.getGenres().stream()
                 .map(Genre::getName)
                 .collect(Collectors.joining(" | "));
+
         textView.setText(text);
 
     }
@@ -101,5 +103,40 @@ public class BindingAdapters {
                 date);
 
         textView.setText(text);
+    }
+
+    @BindingAdapter({"ratingText"})
+    public static void setRatingText(TextView textView, MovieDTO movie) {
+        if (movie == null)
+            return;
+
+        textView.setText(Double.toString(movie.getVoteAverage()));
+    }
+
+    @BindingAdapter({"releaseDate"})
+    public static void setReleaseDate(TextView textView, MovieDTO movie) {
+        if (movie == null)
+            return;
+
+        String releaseDate = movie.getReleaseDate();
+        if (releaseDate == null || releaseDate.isEmpty())
+            return;
+
+        String date = LocalDate.parse(releaseDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        textView.setText(date);
+    }
+
+    @BindingAdapter({"overview"})
+    public static void setOverview(TextView textView, MovieDTO movie) {
+        if (movie == null)
+            return;
+
+        String overview = movie.getOverview();
+        if (overview == null || overview.isEmpty())
+            overview = textView.getResources().getString(R.string.empty_overview);
+
+        textView.setText(overview);
     }
 }

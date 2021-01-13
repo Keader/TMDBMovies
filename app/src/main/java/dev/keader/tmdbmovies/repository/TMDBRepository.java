@@ -1,6 +1,11 @@
 package dev.keader.tmdbmovies.repository;
 
 
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -11,6 +16,8 @@ import dev.keader.tmdbmovies.api.TMDBService;
 import dev.keader.tmdbmovies.api.tmdb.MovieDetail;
 import dev.keader.tmdbmovies.api.tmdb.MovieResult;
 import dev.keader.tmdbmovies.database.dao.TMDBDao;
+import dev.keader.tmdbmovies.database.model.MovieDTO;
+import dev.keader.tmdbmovies.view.adapters.paging.MovieBoundaryCallback;
 import retrofit2.Response;
 import timber.log.Timber;
 
@@ -26,13 +33,24 @@ public class TMDBRepository {
         this.database = database;
     }
 
+    public LiveData<PagedList<MovieDTO>> loadMovies() {
+        DataSource.Factory<Integer, MovieDTO> dataSourceFactory = database.getMoviePaged();
+        LivePagedListBuilder builder = new LivePagedListBuilder(dataSourceFactory, 20);
+        return builder
+                .setBoundaryCallback(new MovieBoundaryCallback(tmdbService, executors, database))
+                .build();
+    }
+
+    /*
+
     public String loadMovies(int page) {
         executors.networkIO().execute(() -> {
             try {
                 Response<MovieResult> result = tmdbService.getMovies(page).execute();
                 if (!result.isSuccessful())
                     throw new IOException("Network Error Code: " + result.code());
-                // TODO: WAITING IMPLEMENT DB
+
+
             } catch (IOException e) {
                 Timber.e(e);
             }
@@ -53,4 +71,6 @@ public class TMDBRepository {
         });
         return "Finalizado";
     }
+
+     */
 }

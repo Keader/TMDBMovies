@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="movie"
+            type="dev.keader.tmdbmovies.database.model.MovieDTO" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +15,6 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cover"
-            tools:src="@tools:sample/backgrounds/scenic"
             android:layout_width="120dp"
             android:layout_height="0dp"
             android:layout_marginVertical="8dp"
@@ -22,7 +23,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="H,2:3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tumbUrl="@{movie.posterPath}"
+            tools:src="@tools:sample/backgrounds/scenic" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
@@ -30,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:gravity="bottom"
+            android:text="@{movie.title}"
             android:textAlignment="gravity"
             android:textColor="?attr/colorOnBackground"
             android:textSize="18sp"
@@ -45,12 +49,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="8dp"
+            android:ellipsize="end"
             android:gravity="bottom"
+            android:maxLines="3"
+            app:overview="@{movie}"
             android:textAlignment="gravity"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp"
-            android:maxLines="3"
-            android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cover"
             app:layout_constraintTop_toBottomOf="@+id/title"
@@ -67,17 +72,20 @@
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/cover"
             app:layout_constraintTop_toBottomOf="@+id/overview"
+            app:ratingText="@{movie}"
             tools:text="9.4" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/label_maxRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/max_rating"
+            android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintBottom_toBottomOf="@+id/label_rating"
             app:layout_constraintStart_toEndOf="@+id/label_rating"
             app:layout_constraintTop_toTopOf="@+id/label_rating" />
+
+        <!-- TODO: HANDLE WITH GENRE BELOW -->
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/genders"
@@ -88,6 +96,7 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:gravity="bottom"
+            android:text="@{movie.genresFormatted}"
             android:maxLines="1"
             android:textAlignment="gravity"
             android:textColor="?attr/colorPrimary"
@@ -113,6 +122,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cover"
             app:layout_constraintTop_toBottomOf="@+id/genders"
+            app:releaseDate="@{movie}"
             tools:text="11/01/2010" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

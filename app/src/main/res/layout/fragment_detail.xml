@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="movieWithRelations"
             type="dev.keader.tmdbmovies.database.model.MovieWithRelations" />
@@ -18,11 +19,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
+            app:bgUrl="@{movieWithRelations.movie.backdropPath}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:bgUrl="@{movieWithRelations.movie.backdropPath}"
             tools:src="@drawable/placeholder_blur" />
 
         <com.google.android.material.card.MaterialCardView
@@ -66,11 +67,11 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:gravity="center"
+                    android:text="@{movieWithRelations.movie.title}"
                     android:textAlignment="gravity"
                     android:textColor="?attr/colorOnBackground"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:text="@{movieWithRelations.movie.title}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -124,11 +125,11 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:gravity="start"
+                    android:text="@string/genre"
                     android:textAlignment="gravity"
                     android:textColor="?android:attr/colorEdgeEffect"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:text="@string/genre"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -145,10 +146,10 @@
                     android:ellipsize="end"
                     android:gravity="bottom"
                     android:maxLines="1"
-                    app:genre="@{movieWithRelations}"
                     android:textAlignment="gravity"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="12sp"
+                    app:genre="@{movieWithRelations}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -163,6 +164,7 @@
                     android:layout_marginTop="56dp"
                     android:layout_marginEnd="16dp"
                     android:gravity="start"
+                    android:text="@string/production"
                     android:textAlignment="gravity"
                     android:textColor="?android:attr/colorEdgeEffect"
                     android:textSize="12sp"
@@ -170,8 +172,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sinopse"
-                    android:text="@string/production" />
+                    app:layout_constraintTop_toBottomOf="@+id/sinopse" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/companies"
@@ -202,6 +203,7 @@
                     android:layout_marginTop="100dp"
                     android:layout_marginEnd="16dp"
                     android:gravity="start"
+                    android:text="@string/popularity"
                     android:textAlignment="gravity"
                     android:textColor="?android:attr/colorEdgeEffect"
                     android:textSize="12sp"
@@ -209,8 +211,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sinopse"
-                    android:text="@string/popularity" />
+                    app:layout_constraintTop_toBottomOf="@+id/sinopse" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/popularity"
@@ -229,8 +230,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:rating="@{movieWithRelations.movie}"
                     app:layout_constraintTop_toBottomOf="@+id/label_companies"
+                    app:rating="@{movieWithRelations.movie}"
                     tools:text="Avaliado em 7.2/10, baseado em 2513 votos, desde o seu lançamento em 12/01/2021" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
