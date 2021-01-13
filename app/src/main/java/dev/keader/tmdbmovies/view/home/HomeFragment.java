@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.room.Room;
 
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import dev.keader.tmdbmovies.NavGraphDirections;
 import dev.keader.tmdbmovies.R;
 import dev.keader.tmdbmovies.api.tmdb.Company;
 import dev.keader.tmdbmovies.api.tmdb.Genre;
@@ -45,14 +47,23 @@ public class HomeFragment extends Fragment {
 
         binding.setLifecycleOwner(this);
 
-        MovieAdapter adapter = new MovieAdapter();
+        MovieAdapter adapter = new MovieAdapter(viewModel);
+        binding.recyclerViewMovies.setAdapter(adapter);
+
         viewModel.getMoviePagedList().observe(getViewLifecycleOwner(), list -> {
             adapter.submitList(list);
         });
 
-        binding.recyclerViewMovies.setAdapter(adapter);
+        viewModel.getMovieClick().observe(getViewLifecycleOwner(), movieWithRelations -> {
+            if (movieWithRelations != null) {
+                NavGraphDirections.ActionGlobalDetailFragment action = HomeFragmentDirections.actionGlobalDetailFragment(
+                        movieWithRelations.getMovie().getId());
+                Navigation.findNavController(getView()).navigate(action);
+                viewModel.finishOnClickEvent();
+            }
+        });
 
-        /*
+        /* Move it to DB test
         TMDBDatabase db = Room.inMemoryDatabaseBuilder(
                 getActivity().getApplicationContext(),
                 TMDBDatabase.class)

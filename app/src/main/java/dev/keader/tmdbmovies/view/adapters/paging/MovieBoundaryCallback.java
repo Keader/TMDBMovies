@@ -120,6 +120,7 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
                 Timber.e("%s%s", result.code(), result.message());
                 return;
             }
+
             database.insertOrUpdateGenres(result.body().getGenres());
         } catch (IOException e) {
             Timber.e(e);

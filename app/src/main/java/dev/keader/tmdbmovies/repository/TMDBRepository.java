@@ -2,20 +2,25 @@ package dev.keader.tmdbmovies.repository;
 
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import dev.keader.tmdbmovies.AppExecutors;
 import dev.keader.tmdbmovies.Constants;
 import dev.keader.tmdbmovies.api.TMDBService;
+import dev.keader.tmdbmovies.api.tmdb.Company;
 import dev.keader.tmdbmovies.api.tmdb.MovieDetail;
 import dev.keader.tmdbmovies.api.tmdb.MovieResult;
 import dev.keader.tmdbmovies.database.dao.TMDBDao;
+import dev.keader.tmdbmovies.database.model.MovieCompany;
 import dev.keader.tmdbmovies.database.model.MovieDTO;
 import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.view.adapters.paging.MovieBoundaryCallback;
@@ -36,42 +41,38 @@ public class TMDBRepository {
 
     public LiveData<PagedList<MovieWithRelations>> loadMovies() {
         DataSource.Factory<Integer, MovieWithRelations> dataSourceFactory = database.getMoviePaged();
-        LivePagedListBuilder builder = new LivePagedListBuilder(dataSourceFactory, 20);
-        return builder
+        return new LivePagedListBuilder(dataSourceFactory, 20)
                 .setBoundaryCallback(new MovieBoundaryCallback(tmdbService, executors, database))
                 .build();
     }
 
-    /*
-
-    public String loadMovies(int page) {
-        executors.networkIO().execute(() -> {
-            try {
-                Response<MovieResult> result = tmdbService.getMovies(page).execute();
-                if (!result.isSuccessful())
-                    throw new IOException("Network Error Code: " + result.code());
-
-
-            } catch (IOException e) {
-                Timber.e(e);
-            }
-        });
-        return "Finalizado";
-    }
-
-    public String loadMovieDetail(long movieId) {
-        executors.networkIO().execute(() -> {
+    public LiveData<MovieWithRelations> getMovieDetail(int movieId) {
+        executors.networkIO().execute(()-> {
             try {
                 Response<MovieDetail> result = tmdbService.getMovieDetail(movieId, Constants.TMDB_EXTERNAL_SOURCE).execute();
-                if (!result.isSuccessful())
-                    throw new IOException("Network Error Code: " + result.code());
-                // TODO: WAITING IMPLEMENT DB
+                if (!result.isSuccessful()) {
+                    Timber.e("%s%s", result.code(), result.message());
+                    return;
+                }
+
+                MovieDetail movieDetail = result.body();
+                int released = movieDetail.isReleased() ? 1 : 0;
+                // Update Movie Detail
+                database.updateMovieDetail(movieId, movieDetail.getVoteAverage(), movieDetail.getOriginalTitle(),
+                        released, movieDetail.getVoteCount(), movieDetail.getBackdropPath());
+                // Insert Companies
+                database.insertOrUpdateCompanies(movieDetail.getProductionCompanies());
+                List<MovieCompany> movieCompanyList = new ArrayList();
+                for (Company company : movieDetail.getProductionCompanies())
+                    movieCompanyList.add(new MovieCompany(movieId, company.getId()));
+                // Insert Relation <movieId, companieId>
+                database.insertOrUpdateMovieCompanies(movieCompanyList);
+
             } catch (IOException e) {
                 Timber.e(e);
             }
         });
-        return "Finalizado";
-    }
 
-     */
+        return database.getMovieWithRelations(movieId);
+    }
 }

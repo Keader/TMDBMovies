@@ -7,11 +7,15 @@
         <variable
             name="movieWithRelations"
             type="dev.keader.tmdbmovies.database.model.MovieWithRelations" />
+        <variable
+            name="movieActions"
+            type="dev.keader.tmdbmovies.view.home.MovieActions" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> movieActions.onMovieClick(movieWithRelations)}">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cover"

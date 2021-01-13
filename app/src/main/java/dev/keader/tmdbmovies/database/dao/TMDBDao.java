@@ -37,6 +37,9 @@ public abstract class TMDBDao {
     public abstract void insertOrUpdateCompany(Company company);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertOrUpdateCompanies(List<Company> companies);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertOrUpdateMovieGenre(MovieGenre movieGenre);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -44,6 +47,9 @@ public abstract class TMDBDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertOrUpdateMovieCompany(MovieCompany movieCompany);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertOrUpdateMovieCompanies(List<MovieCompany> movieCompanies);
 
     @Transaction
     public void insertOrUpateMovieWithRelations(MovieWithRelations movieWithRelations) {
@@ -64,10 +70,9 @@ public abstract class TMDBDao {
     // Update
     @Query("UPDATE Movie SET " +
             "voteAverage = :voteAverage, originalTitle = :originalTitle, released = :releasedInt," +
-            " releaseDate = :releaseDate, voteCount = :voteCount, backdropPath = :backdropPath " +
-            "WHERE id = :movieId")
+            " voteCount = :voteCount, backdropPath = :backdropPath WHERE id = :movieId")
     public abstract void updateMovieDetail(int movieId, double voteAverage, String originalTitle,
-                                    int releasedInt, String releaseDate, int voteCount,
+                                    int releasedInt, int voteCount,
                                     String backdropPath);
 
     // Selects

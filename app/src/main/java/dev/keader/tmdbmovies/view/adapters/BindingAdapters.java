@@ -60,7 +60,6 @@ public class BindingAdapters {
         Glide.with(context)
                 .load(completeUrl)
                 .transform(new CenterCrop(), new GlideBlurTransformation(context))
-                .placeholder(R.drawable.loading)
                 .into(imageView);
     }
 
