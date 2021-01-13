@@ -10,14 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.room.Room;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import dev.keader.tmdbmovies.MainActivity;
 import dev.keader.tmdbmovies.R;
-import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.databinding.FragmentDetailBinding;
-import timber.log.Timber;
 
 @AndroidEntryPoint
 public class DetailFragment extends Fragment {
@@ -32,7 +29,7 @@ public class DetailFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         int movieId = DetailFragmentArgs.fromBundle(getArguments()).getMovieId();
-        viewModel.getMovies(movieId).observe(getViewLifecycleOwner(), movieWithRelations -> {
+        viewModel.getMovie(movieId).observe(getViewLifecycleOwner(), movieWithRelations -> {
             if (movieWithRelations != null) {
                 binding.setMovieWithRelations(movieWithRelations);
                 MainActivity activity = (MainActivity) getActivity();

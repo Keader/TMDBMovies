@@ -50,6 +50,12 @@ public class MovieDTO {
         this.releaseDate = releaseDate;
     }
 
+    @Ignore
+    public MovieDTO(int id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
     public int getIndex() {
         return index;
     }
@@ -155,10 +161,14 @@ public class MovieDTO {
                 Double.compare(movieDTO.popularity, popularity) == 0 &&
                 index == movieDTO.index &&
                 Double.compare(movieDTO.voteAverage, voteAverage) == 0 &&
+                voteCount == movieDTO.voteCount &&
                 released == movieDTO.released &&
-                title.equals(movieDTO.title) &&
+                Objects.equals(title, movieDTO.title) &&
                 Objects.equals(overview, movieDTO.overview) &&
-                Objects.equals(posterPath, movieDTO.posterPath);
+                Objects.equals(posterPath, movieDTO.posterPath) &&
+                Objects.equals(releaseDate, movieDTO.releaseDate) &&
+                Objects.equals(originalTitle, movieDTO.originalTitle) &&
+                Objects.equals(backdropPath, movieDTO.backdropPath);
     }
 
     @Override

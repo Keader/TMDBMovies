@@ -11,6 +11,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import dev.keader.tmdbmovies.api.TMDBService;
 import dev.keader.tmdbmovies.databinding.ActivityMainBinding;
@@ -52,5 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void setAppBarTitle(String title) {
         this.getSupportActionBar().setTitle(title);
+    }
+
+    public Snackbar getSnackBarInstance(String text, int duration) {
+        return Snackbar.make(binding.getRoot(), text, duration);
     }
 }

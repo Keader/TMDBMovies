@@ -51,7 +51,7 @@ public class TMDBRepository {
             try {
                 Response<MovieDetail> result = tmdbService.getMovieDetail(movieId, Constants.TMDB_EXTERNAL_SOURCE).execute();
                 if (!result.isSuccessful()) {
-                    Timber.e("%s%s", result.code(), result.message());
+                    Timber.e("%s %s", result.code(), result.message());
                     return;
                 }
 
