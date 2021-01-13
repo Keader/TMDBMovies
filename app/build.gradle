@@ -44,6 +44,7 @@ dependencies {
     def nav_version = '2.3.2'
     def room_version = "2.2.6"
     def paging_version = "2.1.2"
+    def lottie_version = "3.6.0"
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
@@ -86,6 +87,9 @@ dependencies {
 
     //Paging
     implementation "androidx.paging:paging-runtime:$paging_version"
+
+    // Lottie
+    implementation "com.airbnb.android:lottie:$lottie_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

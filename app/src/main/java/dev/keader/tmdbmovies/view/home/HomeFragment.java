@@ -1,5 +1,8 @@
 package dev.keader.tmdbmovies.view.home;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +37,8 @@ import dev.keader.tmdbmovies.databinding.FragmentHomeBinding;
 import dev.keader.tmdbmovies.view.adapters.MovieAdapter;
 import timber.log.Timber;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
     private HomeViewModel viewModel;
@@ -51,7 +56,12 @@ public class HomeFragment extends Fragment {
         binding.recyclerViewMovies.setAdapter(adapter);
 
         viewModel.getMoviePagedList().observe(getViewLifecycleOwner(), list -> {
-            adapter.submitList(list);
+            if (list.isEmpty())
+                showConnectionAnimation();
+            else {
+                adapter.submitList(list);
+                hideConnectionAnimation();
+            }
         });
 
         viewModel.getMovieClick().observe(getViewLifecycleOwner(), movieWithRelations -> {
@@ -85,5 +95,18 @@ public class HomeFragment extends Fragment {
         Timber.d(movieWithRelations.toString());*/
 
         return binding.getRoot();
+    }
+
+    private void showConnectionAnimation() {
+        binding.animConnection.setVisibility(View.VISIBLE);
+        binding.recyclerViewMovies.setVisibility(View.GONE);
+    }
+
+    private void hideConnectionAnimation() {
+        if (binding.animConnection.getVisibility() == View.GONE)
+            return;
+
+        binding.animConnection.setVisibility(View.GONE);
+        binding.recyclerViewMovies.setVisibility(View.VISIBLE);
     }
 }

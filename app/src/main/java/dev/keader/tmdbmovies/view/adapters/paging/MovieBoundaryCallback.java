@@ -6,7 +6,6 @@ import androidx.paging.PagedList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dev.keader.tmdbmovies.AppExecutors;
 import dev.keader.tmdbmovies.api.TMDBService;
@@ -14,6 +13,7 @@ import dev.keader.tmdbmovies.api.tmdb.Genre;
 import dev.keader.tmdbmovies.api.tmdb.GenreResult;
 import dev.keader.tmdbmovies.api.tmdb.Movie;
 import dev.keader.tmdbmovies.api.tmdb.MovieResult;
+import dev.keader.tmdbmovies.database.TMDBDatabase;
 import dev.keader.tmdbmovies.database.dao.TMDBDao;
 import dev.keader.tmdbmovies.database.model.MovieDTO;
 import dev.keader.tmdbmovies.database.model.MovieGenre;
@@ -24,14 +24,16 @@ import timber.log.Timber;
 public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithRelations> {
     private final TMDBService tmdbService;
     private final AppExecutors executors;
-    private final TMDBDao database;
+    private final TMDBDao tmdbDao;
+    private final TMDBDatabase database;
     private boolean isRunning;
     private int maxPages;
     private boolean isFirstLoad;
 
-    public MovieBoundaryCallback(TMDBService tmdbService, AppExecutors executors, TMDBDao database) {
+    public MovieBoundaryCallback(TMDBService tmdbService, AppExecutors executors, TMDBDao tmdbDao, TMDBDatabase database) {
         this.tmdbService = tmdbService;
         this.executors = executors;
+        this.tmdbDao = tmdbDao;
         this.database = database;
         isRunning = false;
         isFirstLoad = true;
@@ -40,8 +42,10 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
 
     @Override
     public void onZeroItemsLoaded() {
-        loadPage(1, isFirstLoad);
-        isFirstLoad = false;
+        if (isFirstLoad) {
+            loadPage(1, isFirstLoad);
+            isFirstLoad = false;
+        }
     }
 
     @Override
@@ -64,16 +68,14 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
             loadPage(nextPage, isFirstLoad);
     }
 
-    // OBS: Check Genre is "cached" here, because can have a racing condition
-    private void loadPage(int page, boolean loadGenre) {
+    // PS: firstLoad is "cached" here, because can have a racing condition
+    private void loadPage(int page, boolean firstLoad) {
         if (isRunning)
             return;
 
         isRunning = true;
         executors.networkIO().execute(() -> {
             try {
-                if (loadGenre)
-                    loadGenres();
                 Response<MovieResult> result = tmdbService.getMovies(page).execute();
                 if (!result.isSuccessful()) {
                     Timber.e("%s%s", result.code(), result.message());
@@ -84,7 +86,8 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
                 if (maxPages == -1)
                     maxPages = movieResult.getTotalPages();
 
-                List<MovieDTO> movies = new ArrayList();
+                List<MovieDTO> movies = new ArrayList<>();
+                List<MovieGenre> movieGenreList = new ArrayList<>();
                 for (int i = 0; i < movieResult.getResults().size(); i++) {
                     Movie movie = movieResult.getResults().get(i);
                     int index = (movieResult.getPage() - 1) * 20 + i;
@@ -95,14 +98,20 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
 
                     movies.add(dto);
 
-                    // Add genreIds
-                    List<MovieGenre> movieGenreList = new ArrayList();
+                    // Add MovieGenre
                     for (int genreId: movie.getGenreIds())
                         movieGenreList.add(new MovieGenre(movie.getId(), genreId));
-                    database.insertOrUpdateMovieGenres(movieGenreList);
                 }
 
-                database.insertOrUpdateMovies(movies);
+                database.runInTransaction(() -> {
+                    if (firstLoad) {
+                        tmdbDao.cleanDatabase();
+                        List<Genre> genres = loadGenres();
+                        tmdbDao.insertOrUpdateGenres(genres);
+                    }
+                    tmdbDao.insertOrUpdateMovieGenres(movieGenreList);
+                    tmdbDao.insertOrUpdateMovies(movies);
+                });
 
             } catch (IOException e) {
                 Timber.e(e);
@@ -112,18 +121,17 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
         });
     }
 
-    private void loadGenres() {
+    private List<Genre> loadGenres() {
         try {
             Response<GenreResult> result = tmdbService.getGenres().execute();
-
             if (!result.isSuccessful()) {
                 Timber.e("%s%s", result.code(), result.message());
-                return;
+                return new ArrayList<>();
             }
-
-            database.insertOrUpdateGenres(result.body().getGenres());
+            return result.body().getGenres();
         } catch (IOException e) {
             Timber.e(e);
+            return new ArrayList<>();
         }
     }
 }

@@ -8,6 +8,8 @@ import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.time.LocalDate;
@@ -80,6 +82,11 @@ public class BindingAdapters {
         if (movieWithRelations == null)
             return;
 
+        if (movieWithRelations.getCompanies().isEmpty()) {
+            textView.setText(textView.getResources().getString(R.string.missing_company));
+            return;
+        }
+
         String text =  movieWithRelations.getCompanies().stream()
                 .map(Company::getName)
                 .collect(Collectors.joining(" | "));
@@ -96,7 +103,7 @@ public class BindingAdapters {
 
         String text = textView.getResources().getString(
                 R.string.popularity_format,
-                Double.toString(movie.getPopularity()),
+                Double.toString(movie.getVoteAverage()),
                 Integer.toString(movie.getVoteCount()),
                 date);
 
@@ -136,5 +143,18 @@ public class BindingAdapters {
             overview = textView.getResources().getString(R.string.empty_overview);
 
         textView.setText(overview);
+    }
+
+    @BindingAdapter({"originalTitle"})
+    public static void setOriginalTitle(TextView textView, MovieWithRelations movieWithRelations) {
+        if (movieWithRelations == null)
+            return;
+        String originalTitle = movieWithRelations.getMovie().getOriginalTitle();
+        if (originalTitle == null || originalTitle.isEmpty())
+            textView.setText("...");
+        else {
+            originalTitle = textView.getResources().getString(R.string.original_title_format, originalTitle);
+            textView.setText(originalTitle);
+        }
     }
 }

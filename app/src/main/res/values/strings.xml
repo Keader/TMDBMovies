@@ -7,4 +7,6 @@
     <string name="popularity">Popularidade</string>
     <string name="empty_overview">Não existe sinopse para este filme</string>
     <string name="popularity_format">"Avaliado em %1$s/10, baseado em %2$s votos, desde o seu lançamento em %3$s"</string>
+    <string name="missing_company">"Não informado"</string>
+    <string name="original_title_format">"(%1$s)"</string>
 </resources>

@@ -33,7 +33,7 @@ public class GlideBlurTransformation extends BitmapTransformation {
         script.setInput(input);
 
         // Set the blur radius
-        script.setRadius(10);
+        script.setRadius(20);
 
         script.forEach(output);
 
