@@ -17,8 +17,6 @@ public class TMDBMovies extends Application {
         // TODO: Initialize Timber Firebase Here
         Timber.plant(new Timber.DebugTree());
 
-        // TODO: Initializate NavController with AppBar
-
         // Force Light theme (fix bugs with XIAOMI devices)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
