@@ -2,6 +2,7 @@ package dev.keader.tmdbmovies.repository;
 
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
@@ -21,7 +22,6 @@ import dev.keader.tmdbmovies.database.TMDBDatabase;
 import dev.keader.tmdbmovies.database.dao.TMDBDao;
 import dev.keader.tmdbmovies.database.model.MovieCompany;
 import dev.keader.tmdbmovies.database.model.MovieWithRelations;
-import dev.keader.tmdbmovies.view.adapters.paging.MovieBoundaryCallback;
 import retrofit2.Response;
 import timber.log.Timber;
 
@@ -39,11 +39,19 @@ public class TMDBRepository {
         this.database = database;
     }
 
-    public LiveData<PagedList<MovieWithRelations>> loadMovies() {
+    public MovieListObservable loadMovies() {
         DataSource.Factory<Integer, MovieWithRelations> dataSourceFactory = tmdbDao.getMoviePaged();
-        return new LivePagedListBuilder<>(dataSourceFactory, 20)
-                .setBoundaryCallback(new MovieBoundaryCallback(tmdbService, executors, tmdbDao, database))
+        MutableLiveData<Integer> error = new MutableLiveData<>();
+
+        MovieBoundaryCallback movieBoundaryCallback = new MovieBoundaryCallback(tmdbService, executors, tmdbDao, database, code -> {
+            error.postValue(code);
+        });
+
+        LiveData<PagedList<MovieWithRelations>> data = new LivePagedListBuilder<>(dataSourceFactory, 20)
+                .setBoundaryCallback(movieBoundaryCallback)
                 .build();
+
+        return new MovieListObservable(data, error);
     }
 
     public LiveData<MovieWithRelations> getMovieDetail(int movieId) {
@@ -74,5 +82,23 @@ public class TMDBRepository {
         });
 
         return tmdbDao.getMovieWithRelations(movieId);
+    }
+
+    public static class MovieListObservable {
+        private final LiveData<PagedList<MovieWithRelations>> pagedListLiveData;
+        private final MutableLiveData<Integer> error;
+
+        public MovieListObservable(LiveData<PagedList<MovieWithRelations>> pagedListLiveData, MutableLiveData<Integer> error) {
+            this.pagedListLiveData = pagedListLiveData;
+            this.error = error;
+        }
+
+        public LiveData<PagedList<MovieWithRelations>> getPagedListLiveData() {
+            return pagedListLiveData;
+        }
+
+        public MutableLiveData<Integer> getError() {
+            return error;
+        }
     }
 }

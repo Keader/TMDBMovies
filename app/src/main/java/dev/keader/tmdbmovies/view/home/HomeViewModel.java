@@ -11,13 +11,13 @@ import dev.keader.tmdbmovies.repository.TMDBRepository;
 
 public class HomeViewModel extends ViewModel implements MovieActions {
     private final TMDBRepository repository;
-    private LiveData<PagedList<MovieWithRelations>> moviePagedList;
+    private TMDBRepository.MovieListObservable movieListObservable;
     private MutableLiveData<MovieWithRelations> movieClick;
 
     @ViewModelInject
     public HomeViewModel(TMDBRepository rep) {
         repository = rep;
-        moviePagedList = repository.loadMovies();
+        movieListObservable = repository.loadMovies();
         movieClick = new MutableLiveData<>();
     }
 
@@ -35,8 +35,8 @@ public class HomeViewModel extends ViewModel implements MovieActions {
         return movieClick;
     }
 
-    public LiveData<PagedList<MovieWithRelations>> getMoviePagedList() {
-        return moviePagedList;
+    public TMDBRepository.MovieListObservable getMovieListObservable() {
+        return movieListObservable;
     }
 }
 

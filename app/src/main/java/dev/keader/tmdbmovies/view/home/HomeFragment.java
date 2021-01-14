@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.room.Room;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import dev.keader.tmdbmovies.MainActivity;
 import dev.keader.tmdbmovies.NavGraphDirections;
 import dev.keader.tmdbmovies.R;
 import dev.keader.tmdbmovies.api.tmdb.Company;
@@ -34,6 +37,8 @@ import dev.keader.tmdbmovies.database.model.MovieDTO;
 import dev.keader.tmdbmovies.database.model.MovieGenre;
 import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.databinding.FragmentHomeBinding;
+import dev.keader.tmdbmovies.repository.MovieBoundaryCallback;
+import dev.keader.tmdbmovies.repository.TMDBRepository;
 import dev.keader.tmdbmovies.view.adapters.MovieAdapter;
 import timber.log.Timber;
 
@@ -55,12 +60,24 @@ public class HomeFragment extends Fragment {
         MovieAdapter adapter = new MovieAdapter(viewModel);
         binding.recyclerViewMovies.setAdapter(adapter);
 
-        viewModel.getMoviePagedList().observe(getViewLifecycleOwner(), list -> {
+        TMDBRepository.MovieListObservable movieListObservable = viewModel.getMovieListObservable();
+
+        movieListObservable.getPagedListLiveData().observe(getViewLifecycleOwner(), list -> {
             if (list.isEmpty())
                 showConnectionAnimation();
             else {
                 adapter.submitList(list);
                 hideConnectionAnimation();
+            }
+        });
+
+        movieListObservable.getError().observe(getViewLifecycleOwner(), code -> {
+            if (code != null) {
+                /*if (code == 0)
+                    showSnackMessage(getString(R.string.network_error), Snackbar.LENGTH_LONG);
+                else*/
+                    showSnackMessage(getString(R.string.network_error_format, code), Snackbar.LENGTH_SHORT);
+                movieListObservable.getError().setValue(null);
             }
         });
 
@@ -74,6 +91,11 @@ public class HomeFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void showSnackMessage(String text, int duration) {
+        MainActivity activity = (MainActivity) getActivity();
+        activity.getSnackBarInstance(text, duration).show();
     }
 
     private void showConnectionAnimation() {

@@ -1,4 +1,4 @@
-package dev.keader.tmdbmovies.view.adapters.paging;
+package dev.keader.tmdbmovies.repository;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedList;
@@ -29,21 +29,27 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
     private boolean isRunning;
     private int maxPages;
     private boolean isFirstLoad;
+    private final OnLoadError errorHandler;
 
-    public MovieBoundaryCallback(TMDBService tmdbService, AppExecutors executors, TMDBDao tmdbDao, TMDBDatabase database) {
+    public MovieBoundaryCallback(TMDBService tmdbService, AppExecutors executors, TMDBDao tmdbDao, TMDBDatabase database, OnLoadError errorHandler) {
         this.tmdbService = tmdbService;
         this.executors = executors;
         this.tmdbDao = tmdbDao;
         this.database = database;
+        this.errorHandler = errorHandler;
         isRunning = false;
         isFirstLoad = true;
         maxPages = -1;
     }
 
+    public interface OnLoadError {
+        void onLoadError(int code);
+    }
+
     @Override
     public void onZeroItemsLoaded() {
         if (isFirstLoad) {
-            loadPage(1, isFirstLoad);
+            loadPage(1, true);
             isFirstLoad = false;
         }
     }
@@ -55,7 +61,7 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
         if (previousPage > 0)
             loadPage(previousPage, isFirstLoad);
         else if (isFirstLoad) {
-            loadPage(1, isFirstLoad);
+            loadPage(1, true);
             isFirstLoad = false;
         }
     }
@@ -78,7 +84,8 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
             try {
                 Response<MovieResult> result = tmdbService.getMovies(page).execute();
                 if (!result.isSuccessful()) {
-                    Timber.e("%s%s", result.code(), result.message());
+                    Timber.e("%s %s", result.code(), result.message());
+                    errorHandler.onLoadError(result.code());
                     return;
                 }
 
@@ -114,6 +121,7 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
                 });
 
             } catch (IOException e) {
+                errorHandler.onLoadError(0);
                 Timber.e(e);
             } finally {
                 isRunning = false;
@@ -125,11 +133,13 @@ public class MovieBoundaryCallback extends PagedList.BoundaryCallback<MovieWithR
         try {
             Response<GenreResult> result = tmdbService.getGenres().execute();
             if (!result.isSuccessful()) {
-                Timber.e("%s%s", result.code(), result.message());
+                Timber.e("%s %s", result.code(), result.message());
+                errorHandler.onLoadError(result.code());
                 return new ArrayList<>();
             }
             return result.body().getGenres();
         } catch (IOException e) {
+            errorHandler.onLoadError(0);
             Timber.e(e);
             return new ArrayList<>();
         }
