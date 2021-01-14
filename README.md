@@ -11,6 +11,7 @@ Todos os dados são pegos da API e salvos no banco de dados, para só então ser
 Foi notado que o TMDB retorna a lista de filmes em forma de páginas, com 20 elementos por página.  
 Sendo assim, foi utilizada a biblioteca [Paging2](https://developer.android.com/topic/libraries/architecture/paging) para carregar os dados também de forma paginada.  
 Objetivando assim, aumentar a eficiência no carregamento das informações.  
+Observação: O idioma dos filmes, segue o idioma padrão do aparelho em que o aplicativo está instalado.
 
 ### Sobre o App
 Este aplicativo utiliza a arquitetura MVVM (Model-View-View-Model), além de bibliotecas do Android Jetpack, Material Design e de terceiros.  
