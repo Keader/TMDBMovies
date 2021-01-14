@@ -2,18 +2,18 @@
 ![Preview-Screens](https://github.com/Keader/TMDBMovies/blob/master/screenshot/united.png)
 
 ### Qual a função do aplicativo?
-Exibir lista de filmes populares, segundo o site [TMDB](https://www.themoviedb.org/movie?language=pt-BR).
+Exibir lista de filmes populares, segundo o site [TMDB](https://www.themoviedb.org/movie?language=pt-BR).  
 Ao clicar em um filme, são carregados alguns detalhes sobre o mesmo.
 
 ### Decisões de Projeto
-Para confecção deste aplicativo, foi decidido que a fonte da verdade (source of truth) seria o banco de dados local.
-Todos os dados são pegos da API e salvos no banco de dados, para só então serem utilizados pelo aplicativo.
-Foi notado que o TMDB retorna a lista de filmes em forma de páginas, com 20 elementos por página.
-Sendo assim, foi utilizada a biblioteca [Paging2](https://developer.android.com/topic/libraries/architecture/paging) para carregar os dados também de forma paginada.
-Objetivando assim, aumentar a eficiência no carregamento das informações.
+Para confecção deste aplicativo, foi decidido que a fonte da verdade (source of truth) seria o banco de dados local.  
+Todos os dados são pegos da API e salvos no banco de dados, para só então serem utilizados pelo aplicativo.  
+Foi notado que o TMDB retorna a lista de filmes em forma de páginas, com 20 elementos por página.  
+Sendo assim, foi utilizada a biblioteca [Paging2](https://developer.android.com/topic/libraries/architecture/paging) para carregar os dados também de forma paginada.  
+Objetivando assim, aumentar a eficiência no carregamento das informações.  
 
 ### Sobre o App
-Este aplicativo utiliza a arquitetura MVVM (Model-View-View-Model), além de bibliotecas do Android Jetpack, Material Design e de terceiros.
+Este aplicativo utiliza a arquitetura MVVM (Model-View-View-Model), além de bibliotecas do Android Jetpack, Material Design e de terceiros.  
 Dentre as bibliotecas pode-se destacar:
 - [Navigation](https://developer.android.com/guide/navigation/navigation-getting-started) para navegação entre os fragmentos.
 - [Retrofit](https://square.github.io/retrofit/) para chamadas a API do TMDB.
