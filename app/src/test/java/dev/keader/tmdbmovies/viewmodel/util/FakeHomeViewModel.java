@@ -1,10 +1,7 @@
 package dev.keader.tmdbmovies.viewmodel.util;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import java.util.List;
-
 import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 
 public class FakeHomeViewModel {

@@ -86,30 +86,18 @@ public abstract class TMDBDao {
 
     // Do not have detail part
     @Query("SELECT * FROM Movie WHERE id = :movieId")
-    public abstract LiveData<MovieDTO> getMovieSimple(int movieId);
-
-    // Do not have detail part
-    @Query("SELECT * FROM Movie WHERE id = :movieId")
     public abstract MovieDTO getMovieSimpleDirect(int movieId);
 
     @Transaction
     @Query("SELECT * FROM Movie ORDER BY `index` ASC")
     public abstract DataSource.Factory<Integer, MovieWithRelations> getMoviePaged();
 
-    @Query("SELECT * FROM Genre WHERE id IN (:ids)")
-    public abstract List<Genre> getGenreListDirect(List<Integer> ids);
-
     @Query("SELECT * FROM Genre WHERE id = :genreId")
     public abstract Genre getGenreDirect(int genreId);
-
-    @Query("SELECT * FROM Genre WHERE id = :genreId")
-    public abstract LiveData<Genre> getGenre(int genreId);
 
     @Query("SELECT * FROM Company WHERE id = :companyId")
     public abstract Company getCompanyDirect(int companyId);
 
-    @Query("SELECT * FROM Genre WHERE id = :companyId")
-    public abstract LiveData<Company> getCompany(int companyId);
 
     // Deletes (clean)
     @Query("DELETE FROM Movie")

@@ -1,11 +1,9 @@
 package dev.keader.tmdbmovies.viewmodel;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import dev.keader.tmdbmovies.viewmodel.util.FakeDetailViewModel;
 import dev.keader.tmdbmovies.viewmodel.util.LiveDataTestUtil;
 

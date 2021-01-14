@@ -2,9 +2,7 @@ package dev.keader.tmdbmovies.viewmodel.util;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import java.util.Arrays;
-
 import dev.keader.tmdbmovies.api.tmdb.Company;
 import dev.keader.tmdbmovies.api.tmdb.Genre;
 import dev.keader.tmdbmovies.database.model.MovieDTO;

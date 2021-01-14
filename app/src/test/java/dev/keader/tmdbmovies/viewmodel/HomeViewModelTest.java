@@ -2,15 +2,12 @@ package dev.keader.tmdbmovies.viewmodel;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import dev.keader.tmdbmovies.api.tmdb.Company;
 import dev.keader.tmdbmovies.api.tmdb.Genre;
 import dev.keader.tmdbmovies.database.model.MovieDTO;

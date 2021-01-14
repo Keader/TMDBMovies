@@ -1,20 +1,14 @@
 package dev.keader.tmdbmovies.database;
 
 import android.content.Context;
-
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import static com.google.common.truth.Truth.assertThat;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.IOException;
-
 import dev.keader.tmdbmovies.api.tmdb.Company;
 import dev.keader.tmdbmovies.api.tmdb.Genre;
 import dev.keader.tmdbmovies.database.dao.TMDBDao;

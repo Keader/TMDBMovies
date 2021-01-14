@@ -1,8 +1,6 @@
 package dev.keader.tmdbmovies.view.home;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,36 +11,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.room.Room;
-
 import com.google.android.material.snackbar.Snackbar;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import dev.keader.tmdbmovies.MainActivity;
 import dev.keader.tmdbmovies.NavGraphDirections;
 import dev.keader.tmdbmovies.R;
-import dev.keader.tmdbmovies.api.tmdb.Company;
-import dev.keader.tmdbmovies.api.tmdb.Genre;
-import dev.keader.tmdbmovies.database.TMDBDatabase;
-import dev.keader.tmdbmovies.database.dao.TMDBDao;
-import dev.keader.tmdbmovies.database.model.MovieCompany;
-import dev.keader.tmdbmovies.database.model.MovieDTO;
-import dev.keader.tmdbmovies.database.model.MovieGenre;
-import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.databinding.FragmentHomeBinding;
-import dev.keader.tmdbmovies.repository.MovieBoundaryCallback;
 import dev.keader.tmdbmovies.repository.TMDBRepository;
 import dev.keader.tmdbmovies.view.adapters.MovieAdapter;
-import timber.log.Timber;
-
-import static androidx.core.content.ContextCompat.getSystemService;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
@@ -73,9 +49,9 @@ public class HomeFragment extends Fragment {
 
         movieListObservable.getError().observe(getViewLifecycleOwner(), code -> {
             if (code != null) {
-                /*if (code == 0)
+                if (code == 0)
                     showSnackMessage(getString(R.string.network_error), Snackbar.LENGTH_LONG);
-                else*/
+                else
                     showSnackMessage(getString(R.string.network_error_format, code), Snackbar.LENGTH_SHORT);
                 movieListObservable.getError().setValue(null);
             }

@@ -1,22 +1,15 @@
 package dev.keader.tmdbmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import android.os.Bundle;
-
 import com.google.android.material.snackbar.Snackbar;
-
 import dagger.hilt.android.AndroidEntryPoint;
-import dev.keader.tmdbmovies.api.TMDBService;
 import dev.keader.tmdbmovies.databinding.ActivityMainBinding;
-import dev.keader.tmdbmovies.di.AppModule;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {

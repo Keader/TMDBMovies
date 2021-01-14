@@ -10,7 +10,6 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import dev.keader.tmdbmovies.database.model.MovieDTO;
 import dev.keader.tmdbmovies.database.model.MovieWithRelations;
 import dev.keader.tmdbmovies.databinding.ItemMovieBinding;
 import dev.keader.tmdbmovies.view.home.MovieActions;
@@ -46,8 +45,8 @@ public class MovieAdapter extends PagedListAdapter<MovieWithRelations, MovieAdap
             this.movieActions = movieActions;
         }
 
-        public void bind(MovieWithRelations movieDTO) {
-            binding.setMovieWithRelations(movieDTO);
+        public void bind(MovieWithRelations movieWithRelations) {
+            binding.setMovieWithRelations(movieWithRelations);
             binding.setMovieActions(movieActions);
         }
 

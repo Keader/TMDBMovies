@@ -14,10 +14,11 @@ public class TMDBMovies extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // TODO: Initialize Timber Firebase Here
-        Timber.plant(new Timber.DebugTree());
+        if (BuildConfig.DEBUG)
+            Timber.plant(new Timber.DebugTree());
 
         // Force Light theme (fix bugs with XIAOMI devices)
+        // i was using a xiaomi for test :)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 }
