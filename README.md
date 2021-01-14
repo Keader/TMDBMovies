@@ -1,5 +1,5 @@
 # TMDB Movies
-![Preview-Screens](https://github.com/Keader/TMDBMovies/blob/main/screenshot/united.png)
+![Preview-Screens](https://github.com/Keader/TMDBMovies/blob/master/screenshot/united.png)
 
 ### Qual a função do aplicativo?
 Exibir lista de filmes populares, segundo o site [TMDB](https://www.themoviedb.org/movie?language=pt-BR).
